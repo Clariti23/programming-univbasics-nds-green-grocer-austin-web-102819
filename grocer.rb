@@ -56,7 +56,12 @@ def checkout(cart, coupons)
   apply_clearance(con_cart)
   
   while j < con_cart.length 
-   total += it
+   total += item_t_cost(con_cart[j])
+   j += 1
   end
   
 end
+
+def item_t_cost(j)
+ j[:count] * j[:price]
+end  
