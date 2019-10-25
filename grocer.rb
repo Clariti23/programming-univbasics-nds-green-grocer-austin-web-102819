@@ -34,12 +34,12 @@ def apply_clearance(cart)
    i = 0
   while i < coupons.count do
     coupon = coupons[i]
-    item_with_coupon = find_item_by_name_in_collection(coupon[:item], cart)
-    item_is_in_basket = !!item_with_coupon
-    count_is_big_enough_to_apply = item_is_in_basket && item_with_coupon[:count] >= coupon[:num]
+    item_w_coupon = find_item_by_name_in_collection(coupon[:item], cart)
+    item_is_in_basket = !!item_w_coupon
+    count_applies = item_is_in_basket && item_w_coupon[:count] >= coupon[:num]
 
-    if item_is_in_basket and count_is_big_enough_to_apply
-      apply_coupon_to_cart(item_with_coupon, coupon, cart)
+    if item_is_in_basket and count_applies
+      apply_coupon_to_cart(item_w_coupon, coupon, cart)
     end
     i += 1
   end
@@ -48,13 +48,15 @@ def apply_clearance(cart)
 end
 
 def checkout(cart, coupons)
-  # Consult README for inputs and outputs
-  #
-  # This method should call
-  # * consolidate_cart
-  # * apply_coupons
-  # * apply_clearance
-  #
-  # BEFORE it begins the work of calculating the total (or else you might have
-  # some irritated customers
+  j = 0 
+  total = 0 
+  
+  con_cart = consolidate_cart(cart)
+  apply_coupons(con_cart, coupons)
+  apply_clearance(con_cart)
+  
+  while j < con_cart.length 
+   total += it
+  end
+  
 end
