@@ -77,6 +77,6 @@ def checkout(cart, coupons)
   total >= 100 ? total * (1.0 - BIG_PURCHASE_DISCOUNT_RATE) : total
 end
 
-def item_t_cost(j)
- j[:count] * j[:price]
+def item_t_cost(i)
+ i[:count] * i[:price]
 end  
