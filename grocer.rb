@@ -1,34 +1,36 @@
+
 CLEARANCE_ITEM_DISCOUNT_RATE = 0.20
 BIG_PURCHASE_DISCOUNT_RATE = 0.10
 
-
 def find_item_by_name_in_collection(name, collection)
-  i = 0 
-  while i < collection.length do 
+  i = 0
+  while i < collection.length do
     return collection[i] if name === collection[i][:item]
-    i += 1 
-  end   
+    i += 1
+  end
+  nil
 end
 
 def consolidate_cart(cart)
+  i = 0
+  result = []
 
-  i = 0 
-  end_cart = []
-  while i < cart.count do 
+  while i < cart.count do
     item_name = cart[i][:item]
-    sought_item = find_item_by_name_in_collection(item_name, end_cart)
-    
+    sought_item = find_item_by_name_in_collection(item_name, result)
     if sought_item
-      sought_item[:count] += 1 
-    else   
-      cart[i][:count] = 1 
-      end_cart.push(cart[i])
+      sought_item[:count] += 1
+    else
+      cart[i][:count] = 1
+      result << cart[i]
     end
-    
-    i += 1 
+    i += 1
   end
-  end_cart
+
+  result
 end
+
+# Don't forget, you can make methods to make your life easy!
 
 def mk_coupon_hash(c)
   rounded_unit_price = (c[:cost].to_f * 1.0 / c[:num]).round(2)
@@ -39,6 +41,8 @@ def mk_coupon_hash(c)
   }
 end
 
+# A nice "First Order" method to use in apply_coupons
+
 def apply_coupon_to_cart(matching_item, coupon, cart)
   matching_item[:count] -= coupon[:num]
   item_with_coupon = mk_coupon_hash(coupon)
@@ -47,15 +51,15 @@ def apply_coupon_to_cart(matching_item, coupon, cart)
 end
 
 def apply_coupons(cart, coupons)
-     i = 0
+  i = 0
   while i < coupons.count do
     coupon = coupons[i]
-    item_w_coupon = find_item_by_name_in_collection(coupon[:item], cart)
-    item_is_in_basket = !!item_w_coupon
-    count_applies = item_is_in_basket && item_w_coupon[:count] >= coupon[:num]
+    item_with_coupon = find_item_by_name_in_collection(coupon[:item], cart)
+    item_is_in_basket = !!item_with_coupon
+    count_is_big_enough_to_apply = item_is_in_basket && item_with_coupon[:count] >= coupon[:num]
 
-    if item_is_in_basket and count_applies
-      apply_coupon_to_cart(item_w_coupon, coupon, cart)
+    if item_is_in_basket and count_is_big_enough_to_apply
+      apply_coupon_to_cart(item_with_coupon, coupon, cart)
     end
     i += 1
   end
@@ -78,7 +82,7 @@ def apply_clearance(cart)
 end
 
 def checkout(cart, coupons)
- total = 0
+  total = 0
   i = 0
 
   ccart = consolidate_cart(cart)
@@ -86,13 +90,15 @@ def checkout(cart, coupons)
   apply_clearance(ccart)
 
   while i < ccart.length do
-    total += items_t_cost(ccart[i])
+    total += items_total_cost(ccart[i])
     i += 1
   end
 
   total >= 100 ? total * (1.0 - BIG_PURCHASE_DISCOUNT_RATE) : total
 end
 
-def item_t_cost(i)
- i[:count] * i[:price]
-end  
+# Don't forget, you can make methods to make your life easy!
+
+def items_total_cost(i)
+  i[:count] * i[:price]
+end
