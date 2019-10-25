@@ -31,11 +31,7 @@ def consolidate_cart(cart)
 end
 
 def apply_coupons(cart, coupons)
-  matching_item
-end
-
-def apply_clearance(cart)
-   i = 0
+     i = 0
   while i < coupons.count do
     coupon = coupons[i]
     item_w_coupon = find_item_by_name_in_collection(coupon[:item], cart)
@@ -49,6 +45,10 @@ def apply_clearance(cart)
   end
 
   cart
+end
+
+def apply_clearance(cart)
+
 end
 
 def checkout(cart, coupons)
