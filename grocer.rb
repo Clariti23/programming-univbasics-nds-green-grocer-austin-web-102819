@@ -69,7 +69,7 @@ def checkout(cart, coupons)
   apply_coupons(ccart, coupons)
   apply_clearance(ccart)
   
-  while j < con_cart.length 
+  while j < ccart.length 
    total += item_t_cost(ccart[j])
    j += 1
   end
